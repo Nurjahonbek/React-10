@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { useNavigate } from 'react-router-dom'
 
 function Card({ product, viewMode }) {
@@ -16,9 +15,9 @@ function Card({ product, viewMode }) {
                 className={`${viewMode == 'grid' ? 'w-full rounded-lg h-auto aspect-video object-cover': 'w-55 h-50 rounded-lg object-cover mr-6' }`}
                 src={product?.attributes?.image}
             />
-            <div>
-                <h4 className='text-xl mt-2'>{product?.attributes?.title}</h4>
-                <p className='text-xl mt-2'>{product?.attributes?.price}</p>
+            <div className=''>
+                <h2 className='text-xl mt-2'>{product?.attributes?.title}</h2>
+                <p className='text-xl mt-2'><b>$ {product?.attributes?.price}</b></p>
             </div>
         </div>
     )

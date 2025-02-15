@@ -15,7 +15,7 @@ function Products() {
         search: "",
         company: "all",
         order: 'a-z',
-        price: 1000,
+        price: 10000,
         shipping: false,
         category: "all"
     })
@@ -69,7 +69,7 @@ function Products() {
 
     return (
         <div className="container mx-auto px-40">
-            <form className='grid grid-cols-4 gap-4 mt-10 bg-blue-100 p-5 pb-4 rounded-lg'>
+            <form className='grid grid-cols-4 gap-4 mt-10 bg-blue-100 p-5 pb-5 rounded-lg'>
                 <div className='flex flex-col gap-2'>
                     <label>Search Product</label>
                     <input
@@ -128,7 +128,7 @@ function Products() {
                         className='border rounded-md p-2 bg-white'
                         type="range"
                         min={1000}
-                        max={1000000} />
+                        max={100000} />
                 </div>
 
                 <div className='flex flex-col gap-2 text-center'>
@@ -146,13 +146,16 @@ function Products() {
                 <div className='flex flex-col gap-2 text-center'>
                     <button
                         type='reset'
-                        onClick={() => setFilter({ search: "", shipping: false })}
+                        onClick={() => setFilter({ search: "", price: 10000, shipping: false })}
                         className='bg-purple-500 w-full p-1 cursor-pointer rounded-lg text-white' >
                         Reset
                     </button>
                 </div>
 
-                <div className='flex justify-between items-center'>
+                </form>
+
+              <div className='my-5 bg-[#fafaff] rounded-md p-5 '>
+              <div className='flex justify-between items-center'>
                     <p><b>{products.length} products</b></p>
                     <div className='flex gap-3'>
                         <button
@@ -169,7 +172,7 @@ function Products() {
                         </button>
                     </div>
                 </div>
-            </form>
+              </div>
 
             <div className={`${viewMode == 'grid'
                 ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 mt-10'

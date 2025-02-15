@@ -5,7 +5,7 @@ function Header() {
     const location = useLocation()
   return (
     <header>
-          <div className='bg-blue-400'>
+          <div className='bg-neutral-800'>
             <div className="container mx-auto px-40 flex justify-end py-2 gap-3 text-md text-white">
             <Link to= '/login'>Sign in / Guest</Link>
             <Link to= '/register'>Create account</Link>

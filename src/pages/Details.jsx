@@ -17,7 +17,7 @@ function Details() {
   }, [])
   return (
     <div>
-      <h2>da</h2>
+      <h2>details</h2>
     </div>
   )
 }
