@@ -1,8 +1,12 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import basket from '../assets/basket.png'
+import { CartContext } from '../App'
 
 function Header() {
+    const {cart} = useContext(CartContext)
     const location = useLocation()
+
   return (
     <header>
           <div className='bg-neutral-800'>
@@ -32,7 +36,12 @@ function Header() {
                     </li>
                 </ul>
             </nav>
-            <p>10</p>
+            <div className='relative'>
+                <img className='w-8 cursor-pointer h-8' src={basket} />
+               <div className='absolute h-6 w-6 rounded-full bg-blue-500 bottom-6 left-5'>
+                <span className='inline-block items-center text-white left-2 top-0 justify-center absolute'>{cart.length}</span>
+                </div>
+            </div>
             </div>
         </div>
     </header>

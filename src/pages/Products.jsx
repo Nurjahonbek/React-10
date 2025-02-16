@@ -5,12 +5,16 @@ import Card from '../components/Card'
 import win from '../assets/win.png'
 import icon from '../assets/icon.png'
 import { useSearchParams } from 'react-router-dom'
+import Pagination from '@mui/material/Pagination';
+import { DNA } from 'react-loader-spinner'
 
 function Products() {
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(false)
     const [viewMode, setViewMode] = useState('grid')
     const [searchParms, setSearchParams] = useSearchParams()
+    const [currentpage, setCurrentpage] = useState(1)
+    const [TotalPage, setTotalPage] = useState(1)
     const [filter, setFilter] = useState({
         search: "",
         company: "all",
@@ -38,13 +42,33 @@ function Products() {
             url = `/products?search=${filter.search}&category=${filter.category}&company=${filter.company}&order=${filter.order}&price=${filter.price}&shipping=${filter.shipping ? 'on' : ''}`
         }
 
+        if(searchParms.get('page')){
+            setCurrentpage(searchParms.get('page'))
+
+        }
+
         http.get(url)
             .then(response => {
-                if (response.status == 200) setProducts(response?.data?.data)
+                if (response.status == 200) {
+                    setProducts(response?.data?.data)
+                    setTotalPage(response?.data?.meta?.Pagination?.pageCount)
+                }
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false))
     }, [])
+
+        useEffect(() =>{
+            http.get(`/products?page=${currentpage}`)
+            .then(response => {
+                if (response.status == 200) {
+                    setProducts(response?.data?.data)
+                    setTotalPage(response?.data?.meta?.Pagination?.pageCount)
+                }
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false))
+        }, [currentpage])
 
     function handleFilter(e) {
         e.preventDefault()
@@ -53,7 +77,10 @@ function Products() {
         let url = `/products?search=${filter.search}&category=${filter.category}&company=${filter.company}&order=${filter.order}&price=${filter.price}&shipping=${filter.shipping ? 'on' : ''}`
         http.get(url)
             .then(response => {
-                if (response.status == 200) setProducts(response?.data?.data)
+                if (response.status == 200) {
+                    setProducts(response?.data?.data)
+                    setTotalPage(response?.data?.meta?.pageCount)
+                }
             })
             .catch(error => console.log(error))
             .finally(() => setLoading(false))
@@ -66,9 +93,15 @@ function Products() {
     function handleWin() {
         setViewMode('list')
     }
+    function handlepaginate(event, target){
+        setCurrentpage(target)
+        setSearchParams({page:target})
+
+    }
 
     return (
         <div className="container mx-auto px-40">
+
             <form className='grid grid-cols-4 gap-4 mt-10 bg-blue-100 p-5 pb-5 rounded-lg'>
                 <div className='flex flex-col gap-2'>
                     <label>Search Product</label>
@@ -76,7 +109,7 @@ function Products() {
                         value={filter.search}
                         onChange={(e) => setFilter({ ...filter, search: e.target.value })}
                         className='border rounded-md p-2 bg-white'
-                        type="text"
+                        type="text" placeholder='Search...'
                     />
                 </div>
 
@@ -174,15 +207,31 @@ function Products() {
                 </div>
               </div>
 
-            <div className={`${viewMode == 'grid'
+              {loading &&
+             <div className='flex justify-center'>
+                 <DNA
+                    visible={true}
+                    height="250"
+                    width="250"
+                    ariaLabel="dna-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="dna-wrapper"
+                    />
+                 </div>
+                 }
+
+           <div className={`${viewMode == 'grid'
                 ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-7 mt-10'
                 : 'flex flex-col gap-4 mt-10' }`}>
-                {loading && <p>Loading...</p>}
 
                 {!loading && Array.isArray(products) && products.length > 0 && products.map((product, index) => (
                     <Card key={index} product={product} viewMode={viewMode} />
                 ))}
                 {!loading && products.length == 0 && <p>Sorry, no products matched your search...</p>}
+            </div>
+
+            <div className='flex justify-end my-10'>
+            <Pagination count={3} variant="outlined" page={currentpage} onChange={handlepaginate} color='primary' />
             </div>
         </div>
     )
